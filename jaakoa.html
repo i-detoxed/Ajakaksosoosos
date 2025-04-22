@@ -1,0 +1,43 @@
+<!-- verify.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Request</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+    </style>
+</head>
+<body>
+    <h2>Verify to Proceed</h2>
+    <p>Please click the button below to verify your request after viewing ads.</p>
+    <button onclick="verifyAndNotify()">Verify Now</button>
+
+    <script>
+        function verifyAndNotify() {
+            // Get user ID and chat ID from URL parameter (passed by bot)
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('user_id');
+            const chatId = urlParams.get('chat_id');
+            const botToken = '8031674697:AAHxoS87sNuVXgdlk1W5-NFS-I0Bk1GCJ8A'; // Replace with your bot token
+            const destination = urlParams.get('dest') || 'https://example.com';
+
+            // Notify bot via Telegram API
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: `User ${userId} verified at ${new Date().toISOString()}`
+                })
+            }).then(() => {
+                // Redirect to destination after verification
+                window.location.href = destination;
+            }).catch(err => console.error('Notification error:', err));
+        }
+    </script>
+</body>
+</html>
